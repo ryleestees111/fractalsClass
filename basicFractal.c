@@ -1,6 +1,5 @@
 #include "FPToolkit.c"
 
-
 void myLine(double x0, double y0, double x1, double y1){
     
     double t=0;
@@ -35,32 +34,6 @@ void findMidpointOfLine(double p1[2], double p2[2], double result[2]){
      result[1] = (p1[1]+p2[1])/2;
 }
 
-// void drawTriangle(double p1[2], double p2[2], double p3[2], int depth){
-
-
-//     G_rgb(0.0, 1.0, 0.0); 
-//     G_triangle(p1[0], p1[1], p2[0], p2[1], p3[0], p3[1]);
-
-
-//     int d=0;
-//     if(d=depth){
-//         //stop, end case
-//         return;
-//     }
-//     else{
-//         double newP1[2];
-//         newP1[0] = p1[0]/2;
-//         newP1[1] = p1[1]/2;
-//         double newP2[2];
-//         newP2[0] = p2[0]/2;
-//         newP2[1] = p2[1]/2;
-//         double newP3[2];
-//         newP3[0] = p3[0]/2;
-//         newP3[1] = p3[1]/2;
-//         drawTriangle(newP1, newP2, newP3, d+1);
-//     }
-// }
-
 void drawSierpinskiTriangle(int depth, double p1[2], double p2[2], double p3[2]){
     // printf("depth at beginning = %d\n", depth);
 
@@ -83,15 +56,14 @@ void drawSierpinskiTriangle(int depth, double p1[2], double p2[2], double p3[2])
     }
 }
 
-//need to make a triangle based off of user input and then maybe with each click do more depth?
 int main(){
     double height = 800.0;
     double width = 800.0;
 
     G_init_graphics(width, height);
 
-    // clear the screen in a given color
-    G_rgb (165/255.0, 207/255.0, 85/255.0) ; // dark gray
+    //clear the screen in a given color
+    G_rgb (165/255.0, 207/255.0, 85/255.0) ;
     G_clear () ;
 
     double P1[2] ;

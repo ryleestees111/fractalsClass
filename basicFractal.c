@@ -101,10 +101,8 @@ int main(){
     G_wait_click(P2);
     G_wait_click(P3);
     int depth =0;
-    depth = G_wait_key();
-    depth =depth/10;
-    //next step is to draw the three triangles within the first bigger triangle
-    //sierpinski triangle recursively basically
+    //values from waitkey come back as ascii so need to subtract '0' which is 48 in ascii
+    depth = G_wait_key() - '0'; 
 
     drawSierpinskiTriangle(depth, P1, P2, P3);
 

@@ -1,0 +1,8 @@
+# Ignore everything in this folder by default...
+*
+
+# ...except these files
+!.gitignore
+!README.md
+!basicFractal.c
+!FPToolkit.c

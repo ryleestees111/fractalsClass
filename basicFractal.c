@@ -3,13 +3,12 @@
 void myLine(double x0, double y0, double x1, double y1){
     
     double t=0;
+    drawRandomColorMaker();
     while(t<=1){
         double differenceX = x1-x0;
         double differenceY = y1-y0;
         double x=x0+t*(differenceX);
         double y=y0+t*(differenceY);
-
-        G_rgb(192/255.0,140/255.0,230/255.0);
         G_point(x,y);
         double unsignedDiffX = fabs(differenceX);
         double unsignedDiffY = fabs(differenceY);
@@ -19,8 +18,18 @@ void myLine(double x0, double y0, double x1, double y1){
         }
         else{
             t=t+(1/unsignedDiffY);
-                }
+        }
     }
+} 
+
+void drawRandomColorMaker(){
+        int N=255;
+        int colorVal1 = rand() % (N + 1);
+        int colorVal2 = rand() % (N + 1);
+        int colorVal3 = rand() % (N + 1);
+
+        G_rgb(colorVal1/255.0,colorVal2/255.0,colorVal3/255.0);
+    
 }
 
 void drawOneTriangle(double p1[2], double p2[2], double p3[2]){
@@ -36,7 +45,6 @@ void findMidpointOfLine(double p1[2], double p2[2], double result[2]){
 
 void drawSierpinskiTriangle(int depth, double p1[2], double p2[2], double p3[2]){
     // printf("depth at beginning = %d\n", depth);
-
     if(depth==0){
         // printf("Got in return");
         return;
@@ -54,16 +62,21 @@ void drawSierpinskiTriangle(int depth, double p1[2], double p2[2], double p3[2])
         drawSierpinskiTriangle(depth-1, midPoint2, midPoint3, p3);
         // printf("depth in else = %d\n", depth);
     }
+    //to see the lines created in order
+    // G_wait_key();
 }
 
 int main(){
+    srand(time(NULL));
+
     double height = 800.0;
     double width = 800.0;
 
     G_init_graphics(width, height);
 
     //clear the screen in a given color
-    G_rgb (165/255.0, 207/255.0, 85/255.0) ;
+    // G_rgb (165/255.0, 207/255.0, 85/255.0) ;
+    drawRandomColorMaker();
     G_clear () ;
 
     double P1[2] ;

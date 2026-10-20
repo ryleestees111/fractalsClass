@@ -15,6 +15,7 @@ int main(){
     drawRandomColorMaker();
     G_clear () ;
 
+    //wait for the user to select three points 
     double P1[2] ;
     double P2[2] ;
     double P3[2] ;
@@ -26,7 +27,6 @@ int main(){
     depth = G_wait_key() - '0'; 
 
     drawSierpinskiTriangle(depth, P1, P2, P3);
-
 
 
 

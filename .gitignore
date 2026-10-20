@@ -4,6 +4,7 @@
 # ...except these files
 !.gitignore
 !README.md
-!basicFractal.c
+!sierpinskiTriangle.c
 !FPToolkit.c
 !ryleeUtils.c
+!kochCurve.c

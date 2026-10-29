@@ -44,6 +44,13 @@ void drawOneTriangle(double p1[2], double p2[2], double p3[2]){
     myLine(p3[0], p3[1], p1[0], p1[1]);
 }
 
+void rotatePoint(double p[2], double newP[2], double angle){
+    double x=p[0];
+    double y=p[1];
+
+
+}
+
 void findMidpointOfLine(double p1[2], double p2[2], double result[2]){
      result[0] = (p1[0]+p2[0])/2;
      result[1] = (p1[1]+p2[1])/2;

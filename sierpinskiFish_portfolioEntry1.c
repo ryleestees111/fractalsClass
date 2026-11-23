@@ -19,12 +19,66 @@ with the x-axis perpendicular to this plane.
 #define M 700000
 #define CENTER 3      //how far back the circle is
 #define RADIUS 2      //how big the circle is
+#define NUM_BUBBLES 30
+#define MOVIE_FRAMES 180  //2 degrees a frame, so 180 frames is one full lap around the circle
+double bx[NUM_BUBBLES], by[NUM_BUBBLES], br[NUM_BUBBLES], bspeed[NUM_BUBBLES] ;
 double Wsize = 1000  ; //window size ... choose 600 for repl
 double X[M],Y[M],Z[M] ;
 double Xplot[M],Yplot[M] ;
 int N = 0 ;
 
+//fills in one bubble one row at a time, fading from the bottom color to the top color
+void drawGradientBubble(double cx, double cy, double r)
+{
+  double topColor[3]    = {246/255.0, 100/255.0, 238/255.0} ; //pink
+  double bottomColor[3] = {245/255.0, 239/255.0, 244/255.0} ; //almost white
 
+  double dy ;
+  for (dy = -r ; dy <= r ; dy++) {
+    //how wide the bubble is at this height (pythagoras: w^2 + dy^2 = r^2)
+    double w = sqrt(r*r - dy*dy) ;
+
+    //t goes from 0 at the bottom of the bubble to 1 at the top
+    double t = (dy + r)/(2*r) ;
+    G_rgb(bottomColor[0] + t*(topColor[0]-bottomColor[0]),
+          bottomColor[1] + t*(topColor[1]-bottomColor[1]),
+          bottomColor[2] + t*(topColor[2]-bottomColor[2])) ;
+    G_line(cx - w, cy + dy, cx + w, cy + dy) ;
+  }
+}
+
+void makeBubbles()
+{
+  int i ;
+  for (i = 0 ; i < NUM_BUBBLES ; i++) {
+    bx[i] = drand48()*Wsize ;
+    by[i] = drand48()*Wsize ;
+    br[i] = 3 + drand48()*10 ;        //radius from 3 to 13
+    bspeed[i] = 1 + drand48()*3 ;     //speed from 1 to 4 pixels per frame
+  }
+}
+void drawBubbles(int frame)
+{
+  int i ;
+  for (i = 0 ; i < NUM_BUBBLES ; i++) {
+    by[i] += bspeed[i] ;
+
+    //floated off the top? start over at the bottom
+    if (by[i] > Wsize + br[i]) {
+      by[i] = -br[i] ;
+      bx[i] = drand48()*Wsize ;
+    }
+
+    //wobble (the + i makes each bubble wobble at a different time)
+    double wobble = sin(frame*0.1 + i) * 3 ;
+    double x = bx[i] + wobble ;
+
+    //fill it in with the gradient first, then draw the outline on top
+    drawGradientBubble(x, by[i], br[i]) ;
+    G_rgb(1, 1, 1) ;
+    G_circle(x, by[i], br[i]) ;
+  }
+}
 void translate(double dx, double dy, double dz) 
 {
   int i ;
@@ -33,6 +87,17 @@ void translate(double dx, double dy, double dz)
     X[i] += dx ;
     Y[i] += dy ;
     Z[i] += dz ;    
+  }
+}
+
+void scale(double s)
+{
+  int i ;
+
+  for (i = 0 ; i < N ; i++) {
+    X[i] *= s ;
+    Y[i] *= s ;
+    Z[i] *= s ;
   }
 }
 
@@ -182,7 +247,7 @@ void buildFish(int depth)
 }
 
 //fills the screen one row at a time, fading from dark blue at the bottom to light blue at the top
-void drawGradientBackground()
+void drawGradientOceanBackground()
 {
   double topColor[3]    = {  0/255.0, 207/255.0, 255/255.0} ; //light blue
   double bottomColor[3] = {  0/255.0,  30/255.0,  80/255.0} ; //deep ocean blue
@@ -197,22 +262,23 @@ void drawGradientBackground()
     G_line(0, y, Wsize-1, y) ;
   }
 }
-
 void swimFish()
 {
   G_init_graphics(Wsize,Wsize) ;
 
   buildFish(5) ;
+  scale(1.5);
   //put the fish on the edge of the circle, then push the whole circle back away from the camera
   translate(0, 0, RADIUS+CENTER) ;
 
   int frame = 0 ;
+  makeBubbles();
   while (1) {
-    drawGradientBackground() ;
+    drawGradientOceanBackground() ;
     G_rgb(255/255.0, 0/255.0, 214/255.0) ;
     project(3,45) ;
     draw() ;
-
+    drawBubbles(frame);
     //swim 2 degrees around the circle: move the circle's center to the origin, rotate, move it back
     //(the sin part makes it bob up and down a little while it swims)
     translate(0, 0, -CENTER) ;
@@ -220,7 +286,14 @@ void swimFish()
     translate(0, sin(frame*0.05)*0.05, CENTER) ;
 
     if (G_wait_key() == 'q') { break ; }
+
+    //save this frame as a numbered picture for the movie (fish0000.bmp, fish0001.bmp, ...)
+    char fname[200] ;
+    sprintf(fname, "fishMovie/fish%04d.bmp", frame) ;
+    G_save_to_bmp_file(fname) ;
+
     frame++ ;
+    if (frame == MOVIE_FRAMES) { break ; }
   }
 }
 

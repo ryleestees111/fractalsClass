@@ -139,7 +139,7 @@ int save_line(double xs, double ys, double zs,
   return 1 ;
 }
 
-int build_pyramid()
+int buildFish()
 {
   int n,k ;
   double a,x[100],z[100],yv ;
@@ -169,7 +169,7 @@ int test_pyramid()
   G_clear() ;
   G_rgb(0,1,0) ;
 
-  build_pyramid() ;
+  buildFish() ;
   project(3,45) ;
   draw() ;
   print_object() ;
@@ -177,12 +177,12 @@ int test_pyramid()
   G_wait_key() ;
 }
 
-int test_pyramid_rotate()
+int rotateFish()
 {
   //  G_choose_repl_display() ; // not too bad as a repl movie
   G_init_graphics(Wsize,Wsize) ;
 
-  build_pyramid() ;
+  buildFish() ;
   
   while (1) {
     G_rgb(0,0,0) ;
@@ -199,5 +199,5 @@ int test_pyramid_rotate()
 int main()
 {
   // test_pyramid() ;
-   test_pyramid_rotate() ;
+   rotateFish() ;
 }
